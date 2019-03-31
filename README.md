@@ -12,6 +12,6 @@ docker-compose build
 #locate account.json and links.txt to script/
 docker-compose up -d
 docker exec -ti python-gpparse bash
-python gpscrape.py
+python script/gpscrape.py
 ```
 
