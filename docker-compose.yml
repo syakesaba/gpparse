@@ -1,0 +1,42 @@
+selenium-hub-gpparse:
+  image: selenium/hub
+  container_name: 'selenium-hub-gpparse'
+  environment:
+    - "TZ=Asia/Tokyo"
+  shm_size: '512mb'
+  expose:
+    - 4444
+
+chrome:
+  image: selenium/node-chrome-debug
+  container_name: 'chrome-gpparse'
+  links:
+    - selenium-hub-gpparse:hub
+  expose:
+    - 5900
+  volumes:
+    - /dev/shm:/dev/shm
+  shm_size: '1024mb'
+  environment:
+    - "TZ=Asia/Tokyo"
+    - "DBUS_SESSION_BUS_ADDRESS=/dev/null"
+
+#firefox:
+#  image: selenium/node-firefox-debug
+#  container_name: 'firefox'
+#  ports:
+#   - 5910:5900
+#  links:
+#    - selenium-hub:hub
+
+python:
+  build: './python-selenium'
+  container_name: 'python-gpparse'
+  links:
+    - selenium-hub-gpparse:hub
+  command: 'tail -f /dev/null'
+  working_dir: '/root/script/'
+  volumes:
+    - ./script/:/root/script/
+  environment:
+    - 'TZ=Asia/Tokyo'
